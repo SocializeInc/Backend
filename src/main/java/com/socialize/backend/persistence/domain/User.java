@@ -1,9 +1,9 @@
 package com.socialize.backend.persistence.domain;
 
 import jakarta.persistence.*;
-
 import java.util.Calendar;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -15,19 +15,19 @@ public class User {
     private Long id;
 
     @Basic(optional = false)
-    @Column(length = 64, name = "userId")
+    @Column(length = 64, name = "user_id")
     private String userId;
 
     @Basic(optional = false)
-    @Column(length = 100, name = "firstName")
+    @Column(length = 100, name = "first_name")
     private String firstName;
 
     @Basic(optional = false)
-    @Column(length = 100, name = "lastName")
+    @Column(length = 100, name = "last_name")
     private String lastName;
 
     @Basic(optional = false)
-    @Column(length = 25, name = "userName")
+    @Column(length = 25, name = "user_name")
     private String userName;
 
     @Basic(optional = false)
@@ -47,12 +47,18 @@ public class User {
     private String description;
 
     @Basic(optional = false)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date")
     private Calendar createDate;
 
     @Basic(optional = false)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "birth_date")
     private Calendar birthDate;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     public User(String userId, String firstName, String lastName, String userName, String country, String email, String password, String description, Calendar createDate, Calendar birthDate) {
         this.userId = userId;
@@ -65,6 +71,9 @@ public class User {
         this.description = description;
         this.createDate = createDate;
         this.birthDate = birthDate;
+    }
+
+    public User() {
     }
 
     public Long getId() {
@@ -155,6 +164,14 @@ public class User {
         this.birthDate = birthDate;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -184,6 +201,7 @@ public class User {
                 ", description='" + description + '\'' +
                 ", createDate=" + createDate +
                 ", birthDate=" + birthDate +
+                ", roles=" + roles +
                 '}';
     }
 }
