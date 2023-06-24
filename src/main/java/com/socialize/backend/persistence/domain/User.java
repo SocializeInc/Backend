@@ -1,6 +1,8 @@
 package com.socialize.backend.persistence.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,6 +38,7 @@ public class User {
 
     @Basic(optional = false)
     @Column(name = "email")
+    @Email
     private String email;
 
     @Basic(optional = false)
