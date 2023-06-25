@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
-    private final Long id;
+    private final String userId;
     private final String username;
     private final String email;
 
@@ -22,8 +22,8 @@ public class UserDetailsImpl implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
+    public UserDetailsImpl(String userId, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.userId = userId;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -35,7 +35,8 @@ public class UserDetailsImpl implements UserDetails {
                 .map(role -> new SimpleGrantedAuthority(role.getRole().name()))
                 .collect(Collectors.toList());
 
-        return new UserDetailsImpl(user.getId(),
+        return new UserDetailsImpl(
+                user.getUserId(),
                 user.getUserName(),
                 user.getEmail(),
                 user.getPassword(),
@@ -45,6 +46,10 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public String getEmail() {return email;}
@@ -86,11 +91,11 @@ public class UserDetailsImpl implements UserDetails {
 
         UserDetailsImpl that = (UserDetailsImpl) o;
 
-        return id.equals(that.id);
+        return userId.equals(that.userId);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return userId.hashCode();
     }
 }
