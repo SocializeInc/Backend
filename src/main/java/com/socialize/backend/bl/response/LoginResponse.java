@@ -1,74 +1,52 @@
-package com.socialize.backend.persistence.domain;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+package com.socialize.backend.bl.response;
 
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
-@Entity
-@Table( name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username"),
-                @UniqueConstraint(columnNames = "email")
-        })
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class LoginResponse {
+    private String token;
+    private String type = "Bearer";
     private Long id;
-
-    @NotBlank
-    @Size(min = 3, max = 25)
     private String username;
-
-    @NotBlank
-    @Size(max = 100)
     private String firstname;
-
-    @NotBlank
-    @Size(max = 100)
     private String lastname;
-
-    @NotBlank
-    @Size(max = 50)
-    @Email
     private String email;
-
-    @NotBlank
-    @Size(max = 120)
-    private String password;
-
-    @NotBlank
-    @Size(max = 50)
     private String country;
-
-    @Size(max = 500)
     private String description;
-
-    @NotNull
     private Calendar birthDate;
-
-    @NotNull
     private Calendar createDate;
+    private List<String> roles;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
-
-    public User() {
-    }
-
-    public User(String username, String firstname, String lastname, String email, String password,
-                String country, Calendar birthDate, Calendar createDate) {
+    public LoginResponse(String accessToken, Long id, String username, String firstname, String lastname,
+                         String email, String country, String description, Calendar birthDate, Calendar createDate,
+                         List<String> roles) {
+        this.token = accessToken;
+        this.id = id;
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
-        this.password = password;
         this.country = country;
+        this.description = description;
         this.birthDate = birthDate;
         this.createDate = createDate;
+        this.roles = roles;
+    }
+
+    public String getAccessToken() {
+        return token;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.token = accessToken;
+    }
+
+    public String getTokenType() {
+        return type;
+    }
+
+    public void setTokenType(String tokenType) {
+        this.type = tokenType;
     }
 
     public Long getId() {
@@ -79,14 +57,6 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -95,20 +65,16 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getUsername() {
+        return username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public Set<Role> getRoles() {
+    public List<String> getRoles() {
         return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 
     public String getFirstname() {
@@ -161,13 +127,14 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
+        return "LoginResponse{" +
+                "token='" + token + '\'' +
+                ", type='" + type + '\'' +
+                ", id=" + id +
                 ", username='" + username + '\'' +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", country='" + country + '\'' +
                 ", description='" + description + '\'' +
                 ", birthDate=" + birthDate +
