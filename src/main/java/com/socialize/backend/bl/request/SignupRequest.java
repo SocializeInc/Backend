@@ -3,23 +3,20 @@ package com.socialize.backend.bl.request;
 import jakarta.validation.constraints.*;
 
 import java.util.Calendar;
+import java.util.Set;
 
 public class SignupRequest {
-
     @NotBlank
-    @Size(min = 3, max = 100)
-    private String firstName;
-
-    @NotBlank
-    @Size(min = 3, max = 100)
-    private String lastName;
-
-    @NotBlank
-    @Size(min = 5, max = 25)
+    @Size(min = 3, max = 25)
     private String username;
 
     @NotBlank
-    private String country;
+    @Size(max = 100)
+    private String firstname;
+
+    @NotBlank
+    @Size(max = 100)
+    private String lastname;
 
     @NotBlank
     @Size(max = 50)
@@ -27,23 +24,18 @@ public class SignupRequest {
     private String email;
 
     @NotBlank
+    @Size(min = 6, max = 40)
+    private String password;
+
+    @NotBlank
+    @Size(max = 50)
+    private String country;
+
+    @NotNull
     private Calendar birthDate;
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+    //set by frontend
+    private Set<String> role;
 
     public String getUsername() {
         return username;
@@ -51,14 +43,6 @@ public class SignupRequest {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
     }
 
     public String getEmail() {
@@ -69,11 +53,65 @@ public class SignupRequest {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<String> getRole() {
+        return this.role;
+    }
+
+    public void setRole(Set<String> role) {
+        this.role = role;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     public Calendar getBirthDate() {
         return birthDate;
     }
 
     public void setBirthDate(Calendar birthDate) {
         this.birthDate = birthDate;
+    }
+
+    @Override
+    public String toString() {
+        return "SignupRequest{" +
+                "username='" + username + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", country='" + country + '\'' +
+                ", birthDate=" + birthDate +
+                ", role=" + role +
+                '}';
     }
 }

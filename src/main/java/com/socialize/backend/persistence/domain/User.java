@@ -1,82 +1,74 @@
 package com.socialize.backend.persistence.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.*;
 
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table( name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "email")
+        })
 public class User {
-
     @Id
-    @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Basic(optional = false)
-    @Column(length = 64, name = "user_id")
-    private String userId;
+    @NotBlank
+    @Size(min = 3, max = 25)
+    private String username;
 
-    @Basic(optional = false)
-    @Column(length = 100, name = "first_name")
-    private String firstName;
+    @NotBlank
+    @Size(max = 100)
+    private String firstname;
 
-    @Basic(optional = false)
-    @Column(length = 100, name = "last_name")
-    private String lastName;
+    @NotBlank
+    @Size(max = 100)
+    private String lastname;
 
-    @Basic(optional = false)
-    @Column(length = 25, name = "user_name")
-    private String userName;
-
-    @Basic(optional = false)
-    @Column(name = "country")
-    private String country;
-
-    @Basic(optional = false)
-    @Column(name = "email")
+    @NotBlank
+    @Size(max = 50)
     @Email
     private String email;
 
-    @Basic(optional = false)
-    @Column(name = "password")
+    @NotBlank
+    @Size(max = 120)
     private String password;
 
-    @Basic(optional = true)
-    @Column(length = 500, name = "description")
+    @NotBlank
+    @Size(max = 50)
+    private String country;
+
+    @Size(max = 500)
     private String description;
 
-    @Basic(optional = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date")
-    private Calendar createDate;
-
-    @Basic(optional = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "birth_date")
+    @NotNull
     private Calendar birthDate;
 
+    @NotNull
+    private Calendar createDate;
+
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User(String userId, String firstName, String lastName, String userName, String country, String email, String password, String description, Calendar createDate, Calendar birthDate) {
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.userName = userName;
-        this.country = country;
-        this.email = email;
-        this.password = password;
-        this.description = description;
-        this.createDate = createDate;
-        this.birthDate = birthDate;
+    public User() {
     }
 
-    public User() {
+    public User(String username, String firstname, String lastname, String email, String password,
+                String country, Calendar birthDate, Calendar createDate) {
+        this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.password = password;
+        this.country = country;
+        this.birthDate = birthDate;
+        this.createDate = createDate;
     }
 
     public Long getId() {
@@ -87,44 +79,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -143,20 +103,44 @@ public class User {
         this.password = password;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Calendar getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Calendar createDate) {
-        this.createDate = createDate;
     }
 
     public Calendar getBirthDate() {
@@ -167,43 +151,27 @@ public class User {
         this.birthDate = birthDate;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Calendar getCreateDate() {
+        return createDate;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        User user = (User) o;
-
-        return id.equals(user.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
+    public void setCreateDate(Calendar createDate) {
+        this.createDate = createDate;
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", userId='" + userId + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", userName='" + userName + '\'' +
-                ", country='" + country + '\'' +
+                ", username='" + username + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", country='" + country + '\'' +
                 ", description='" + description + '\'' +
-                ", createDate=" + createDate +
                 ", birthDate=" + birthDate +
+                ", createDate=" + createDate +
                 ", roles=" + roles +
                 '}';
     }

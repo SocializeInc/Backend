@@ -7,39 +7,68 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.socialize.backend.persistence.domain.User;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
-    private final String userId;
+    private final Long id;
+
     private final String username;
+
+    private final String firstname;
+
+    private final String lastname;
+
     private final String email;
 
     @JsonIgnore
     private final String password;
 
+    private final String country;
+
+    private final String description;
+
+    private final Calendar birthDate;
+
+    private final Calendar createDate;
+
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(String userId, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.userId = userId;
+    public UserDetailsImpl(Long id, String username, String firstname, String lastname, String email, String password,
+                           String country, String description, Calendar birthDate, Calendar createDate,
+                           Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
         this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.email = email;
         this.password = password;
+        this.country = country;
+        this.description = description;
+        this.birthDate = birthDate;
+        this.createDate = createDate;
         this.authorities = authorities;
     }
 
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRole().name()))
+                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
 
-        return new UserDetailsImpl(
-                user.getUserId(),
-                user.getUserName(),
+        return new UserDetailsImpl(user.getId(),
+                user.getUsername(),
+                user.getFirstname(),
+                user.getLastname(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getCountry(),
+                user.getDescription(),
+                user.getBirthDate(),
+                user.getCreateDate(),
                 authorities);
     }
 
@@ -48,20 +77,46 @@ public class UserDetailsImpl implements UserDetails {
         return authorities;
     }
 
-    public String getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public String getEmail() {return email;}
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 
     @Override
     public String getPassword() {
         return password;
     }
 
-    @Override
-    public String getUsername() {
-        return username;
+    public String getCountry() {
+        return country;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Calendar getBirthDate() {
+        return birthDate;
+    }
+
+    public Calendar getCreateDate() {
+        return createDate;
     }
 
     @Override
@@ -86,16 +141,11 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UserDetailsImpl that = (UserDetailsImpl) o;
-
-        return userId.equals(that.userId);
-    }
-
-    @Override
-    public int hashCode() {
-        return userId.hashCode();
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        UserDetailsImpl user = (UserDetailsImpl) o;
+        return Objects.equals(id, user.id);
     }
 }
