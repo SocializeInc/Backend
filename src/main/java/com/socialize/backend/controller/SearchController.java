@@ -9,6 +9,7 @@ import com.socialize.backend.persistence.domain.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Calendar;
@@ -27,6 +28,7 @@ public class SearchController {
     }
 
     @PostMapping("/users")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> searchUsers(@RequestBody SearchRequest searchRequest) {
 
         System.out.println("Debug" + searchRequest.getData());
