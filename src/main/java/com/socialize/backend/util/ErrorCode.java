@@ -9,7 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public enum ErrorCode {
     OK(0),
     NOK(999),
-    GENERAL_ERROR(5000);
+    GENERAL_ERROR(5000),
+    INVALID_USER_PRINCIPAL(4),
+    INVALID_PROFILE_DATA(5);
 
 
     private static ConcurrentHashMap<Integer, ErrorCode> cache;

@@ -1,5 +1,8 @@
 package com.socialize.backend.bl.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SignupResponse {
     private String message;
 

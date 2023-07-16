@@ -1,9 +1,11 @@
 package com.socialize.backend.bl.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.socialize.backend.persistence.domain.User;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchResponse {
 
     private List<User> users;
