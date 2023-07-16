@@ -1,9 +1,9 @@
 package com.socialize.backend.controller;
 
-import com.socialize.backend.bl.request.LoginRequest;
-import com.socialize.backend.bl.request.SignupRequest;
-import com.socialize.backend.bl.response.LoginResponse;
-import com.socialize.backend.bl.response.SignupResponse;
+import com.socialize.backend.bl.dto.request.LoginRequest;
+import com.socialize.backend.bl.dto.request.SignupRequest;
+import com.socialize.backend.bl.dto.response.LoginResponse;
+import com.socialize.backend.bl.dto.response.SignupResponse;
 import com.socialize.backend.persistence.domain.Role;
 import com.socialize.backend.persistence.repository.RoleRepository;
 import com.socialize.backend.persistence.repository.UserRepository;
