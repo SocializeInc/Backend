@@ -1,4 +1,4 @@
-package com.socialize.backend.bl.response;
+package com.socialize.backend.bl.dto.response;
 
 public class SignupResponse {
     private String message;

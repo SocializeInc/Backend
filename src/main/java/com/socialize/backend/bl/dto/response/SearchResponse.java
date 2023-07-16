@@ -1,4 +1,4 @@
-package com.socialize.backend.bl.response;
+package com.socialize.backend.bl.dto.response;
 
 import com.socialize.backend.persistence.domain.User;
 

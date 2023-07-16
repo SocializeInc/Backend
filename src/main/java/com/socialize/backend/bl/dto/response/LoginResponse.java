@@ -1,4 +1,4 @@
-package com.socialize.backend.bl.response;
+package com.socialize.backend.bl.dto.response;
 
 import java.util.Calendar;
 import java.util.List;
