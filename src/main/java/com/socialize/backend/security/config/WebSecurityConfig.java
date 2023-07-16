@@ -65,6 +65,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/socialize/api/auth/**").permitAll()
                                 .requestMatchers("/socialize/api/search/**").permitAll()
+                                .requestMatchers("/socialize/api/account/**").permitAll()
                                 .requestMatchers("/api/test/**").permitAll()
                                 .anyRequest().authenticated()
                 );

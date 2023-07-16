@@ -1,4 +1,4 @@
-package com.socialize.backend.bl.request;
+package com.socialize.backend.bl.dto.request;
 
 import jakarta.validation.constraints.*;
 
