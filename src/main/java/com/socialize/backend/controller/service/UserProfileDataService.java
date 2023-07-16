@@ -46,10 +46,6 @@ public class UserProfileDataService {
     protected UserProfileDataResponse processRequest() throws ErrorCodeException {
         UserProfileDataResponse response = userDataService.getData();
 
-        if (response != null) {
-            return response;
-        } else {
-            throw new ErrorCodeException(ErrorCode.INVALID_PROFILE_DATA);
-        }
+        return response;
     }
 }
