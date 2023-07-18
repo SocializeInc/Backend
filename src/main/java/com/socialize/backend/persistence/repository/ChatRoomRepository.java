@@ -10,11 +10,11 @@ import java.util.List;
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long>, JpaSpecificationExecutor<ChatRoom> {
 
     @Query("SELECT cR FROM ChatRoom cR WHERE cR.userId = :userId AND cR.joinUserId = :joinUserId")
-    ChatRoom roomList(Long userId, Long joinUserId);
+    ChatRoom findRoomByParticipantIds(Long userId, Long joinUserId);
 
     @Query("SELECT cR FROM ChatRoom cR WHERE cR.userId = :id OR cR.joinUserId = :id")
-    List<ChatRoom> findRoomsById(Long id);
+    List<ChatRoom> findRoomsByUserId(Long id);
+    @Query("SELECT cR FROM ChatRoom cR WHERE cR.id = :id")
+    ChatRoom findRoomById(Long id);
 
-    @Query("SELECT cR.name FROM ChatRoom cR WHERE cR.id = :id")
-    String findRoomNameById(Long id);
 }

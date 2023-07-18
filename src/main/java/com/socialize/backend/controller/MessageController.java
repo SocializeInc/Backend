@@ -1,6 +1,7 @@
 package com.socialize.backend.controller;
 
 import com.socialize.backend.bl.dto.request.MessagesCreateRoomRequest;
+import com.socialize.backend.bl.dto.request.SendMessageRequest;
 import com.socialize.backend.bl.dto.response.MessagesGetRoomsResponse;
 import com.socialize.backend.bl.dto.response.ChatGetMessagesResponse;
 import com.socialize.backend.bl.dto.response.MessagesRoomResponse;
@@ -49,7 +50,7 @@ public class MessageController {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
         String receiverUsername = messagesCreateRoomRequest.getJoinUsername();
 
-        ChatRoom room = chatRoomRepository.roomList(userPrincipal.getId(), userRepository.findIdByUsername(receiverUsername));
+        ChatRoom room = chatRoomRepository.findRoomByParticipantIds(userPrincipal.getId(), userRepository.findIdByUsername(receiverUsername));
         if (room != null){
             return ResponseEntity.ok(room.getId());
         }
@@ -58,7 +59,7 @@ public class MessageController {
             return ResponseEntity.badRequest().body("You cant create a chatroom with yourself!");
         }
 
-        ChatRoom chatRoom = new ChatRoom(userPrincipal.getId(), userRepository.findIdByUsername(receiverUsername), userRepository.findFirstNameByUsername(receiverUsername) + " " + userRepository.findLastNameByUsername(receiverUsername), Calendar.getInstance());
+        ChatRoom chatRoom = new ChatRoom(userPrincipal.getId(), userRepository.findIdByUsername(receiverUsername), Calendar.getInstance());
         chatRoomRepository.save(chatRoom);
 
         return ResponseEntity.ok(chatRoom.getId());
@@ -71,7 +72,7 @@ public class MessageController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
-        List<ChatRoom> rooms = chatRoomRepository.findRoomsById(userPrincipal.getId());
+        List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userPrincipal.getId());
 
         List<MessagesRoomResponse> roomsResponse = new ArrayList<>();
         rooms.stream()
@@ -93,7 +94,26 @@ public class MessageController {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         List<Message> messages = messageRepository.findMessageByRoomId(id);
+        String roomName;
 
-        return ResponseEntity.ok(new ChatGetMessagesResponse(chatRoomRepository.findRoomNameById(id), messages));
+        if (chatRoomRepository.findRoomById(id).getJoinUserId().equals(userPrincipal.getId())) {
+            roomName = userRepository.findUsernameById(chatRoomRepository.findRoomById(id).getUserId());
+        } else {
+            roomName = userRepository.findUsernameById(chatRoomRepository.findRoomById(id).getJoinUserId());
+        }
+
+        return ResponseEntity.ok(new ChatGetMessagesResponse(roomName, messages));
+    }
+
+    @PostMapping("/{id}/sendMessage")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> getMessages(@PathVariable Long id, @Valid @RequestBody SendMessageRequest sendMessageRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+
+        Message message = new Message(sendMessageRequest.getMessage(), userPrincipal.getId(), userRepository.findIdByUsername(sendMessageRequest.getTargetName()), Calendar.getInstance(), false, id);
+        messageRepository.save(message);
+
+        return ResponseEntity.ok("Message sent");
     }
 }

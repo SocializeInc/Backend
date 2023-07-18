@@ -21,10 +21,6 @@ public class ChatRoom {
 
     private Long joinUserId;
 
-    @NotBlank
-    @Size(min = 3, max = 25)
-    private String name;
-
     @NotNull
     private Calendar createdAt;
 
@@ -32,10 +28,9 @@ public class ChatRoom {
 
     }
 
-    public ChatRoom(Long userId, Long joinUserId, String name, Calendar createdAt) {
+    public ChatRoom(Long userId, Long joinUserId, Calendar createdAt) {
         this.userId = userId;
         this.joinUserId = joinUserId;
-        this.name = name;
         this.createdAt = createdAt;
     }
 
@@ -63,14 +58,6 @@ public class ChatRoom {
         this.joinUserId = joinUserId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Calendar getCreatedAt() {
         return createdAt;
     }
@@ -85,7 +72,6 @@ public class ChatRoom {
                 "id=" + id +
                 ", userId=" + userId +
                 ", joinUserId=" + joinUserId +
-                ", name='" + name + '\'' +
                 ", createDate=" + createdAt +
                 '}';
     }
